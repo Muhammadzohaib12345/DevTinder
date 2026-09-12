@@ -3,34 +3,60 @@ const express = require("express")
 // Creating a new express JS application
 const app = express()
 
-// This will handle the GET request to the /user route and send a JSON response with user information.
-app.get("/user", (req, res)=>{
-    res.send({
-        "firstName": "zohaib",
-        "lastName": "khan",
-    })
-})
+
+app.use("/user", [
+    // If there is no response is present in Route 1
+// (req, res, next)=>{
+//     console.log("handling the route user!!")
+//     next()  
+// }, 
+// (req, res)=>{
+// console.log("handling the route user 2!!")
+// res.send("2nd reponse")
+// },
+
+// If there is both response is present
+// (req, res, next)=>{
+//     console.log("handling the route user!!")
+//     // if we call the next first
+//     next()
+//     res.send("1st response")
+//     // next()  
+// }, 
+// (req, res)=>{
+// console.log("handling the route user 2!!")
+// res.send("2nd reponse")
+// },
 
 
-// This will handle the only post http api call to /user route
-app.post("/user", (req, res)=>{
-    res.send("Data is saved successfully to db")
-})
+// if there are multiple route handler
+(req, res, next)=>{
+    console.log("handling the route user 1!!")
+    // No response
+    next()
+},
+(req, res, next)=>{
+    console.log("handling the route user 2!!")
+    // No response
+    next()
+},
+(res, req, next)=>{
+    console.log("handling route user 3!!")
+    // No response
+    next()
+}, 
+(req, res, next)=>{
+    console.log("handling route user 4!!")
+    // No response
+    next()
+},
+(req, res, next)=>{
+    console.log("handling route user 5!!")
+    res.send("response 5!!")
+    next()
+}]
+)
 
-
-app.delete("/user", (req, res)=>{
-    res.send("Deleted successfully")
-})
-
-// This will only handle the patch HTTP API call to /user route
-app.patch("/user", (req, res)=>{
-    res.send("This is the patch api")
-})
-// request handler /test
-// If we use the app.use() method, it will be used for all the HTTP methods (GET, POST, PUT, DELETE, etc.) and for test  the routes.
-app.use("/test",(req, res)=>{
-    res.send("hello from test route" )
-})
 
 app.listen(9999, ()=>{
     console.log("server is running")
