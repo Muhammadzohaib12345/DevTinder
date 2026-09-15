@@ -1,28 +1,29 @@
 const express = require("express")
+const connectDb = require("./config/database")
+const User = require("./models/user")
 
-const { adminAuth, userAuth } = require("./middlewares/auth")
-
-// Creating a new express JS application
 const app = express()
-// Middleware for all the HTTP methods POST, GET, PATCH .... request
-app.use("/admin", adminAuth)
-app.use("/user", userAuth)
+app.use(express.json())
 
-app.get("/user/get", (req, res)=>{
-    res.send("this is get call after the userAuth")
-})
-app.get("/admin/getAllData", (req, res)=>{
-    res.send("All data is sent")
-})
-app.post("/admin/post", (req, res)=>{
-        res.send("This is the post request for the admin")
-})
-app.delete("/admin/deleteData", (req, res)=>{
-    res.send("you can delete the user's data")
+app.post("/signup", async(req, res)=>{
+
+    // Creating a new instance of the User model
+    const user = new User(req.body)
+try{
+    await user.save()
+    res.send("user saved successfully")
+}catch(err){
+    res.status(400).send("Error to saving the data" + err.message)
+}
 })
 
-
-
-app.listen(9999, ()=>{
+connectDb() 
+.then(()=>{
+    console.log("connection established successfully")
+    app.listen(9999, ()=>{
     console.log("server is running")
+})
+})
+.catch(err =>{
+    console.error("connection established to cluster is not")
 })
