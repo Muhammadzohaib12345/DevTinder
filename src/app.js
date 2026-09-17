@@ -5,10 +5,12 @@ const User = require("./models/user")
 const app = express()
 app.use(express.json())
 
+
+// Signup api
 app.post("/signup", async(req, res)=>{
 
     // Creating a new instance of the User model
-    const user = new User(req.body)
+const user = new User(req.body)
 try{
     await user.save()
     res.send("user saved successfully")
@@ -17,7 +19,7 @@ try{
 }
 })
 
-// Getting users
+// Getting users by email
 app.get("/user", async(req, res)=>{
 try{
     const email = req.body.email
@@ -31,43 +33,6 @@ res.status(404).send("User not found")
 res.send(400).send("Something went wrong")
 }
 })
-
-// Getting user by findOne method
-// app.get("/user", async(req, res)=>{
-// try{
-//     const email = req.body.email
-//     const user = await User.findOne()
-//     if(!user){
-// res.status(404).send("User not found")
-//     }else{
-//         res.send(user)
-//     }
-// }catch(error){
-// res.send(400).send("Something went wrong")
-// }
-// })
-
-
-// Getting user by using the FindbyId
-app.get("/findbyid", async(req, res)=>{
-    try{
-        const id = req.body.id
-        console.log(id)
-        const user = await User.findById(id)
-        if(!user){
-            res.status(404).send("user not found with this id")
-        }else {
-            res.send(user)
-        }
-    }catch(error){
-        if(error.name === "CastError"){
-            res.status(404).send("user not found with this id")
-        }else {
-             res.send("something went wrong")
-        }
-    }
-})
-
 
 // Delete user api
 app.delete("/user", async(req, res)=>{
@@ -103,18 +68,6 @@ app.patch("/user", async(req, res)=>{
     }
 })
 
-
-// update user with email
-app.patch("/email", async(req, res)=>{
-    try{
-        const email = req.body.email
-        const data = req.body
-        const user = await User.findOneAndUpdate({email: email}, data, {strict: false})
-        res.send("user data with the provided email is successfully updated")
-    }catch(error){
-        res.status(500).send("Something went wrong")
-    }
-})
 // Getting the feed
 app.get("/feed", async(req, res)=>{
     try{
@@ -133,5 +86,5 @@ connectDb()
 })
 })
 .catch(err =>{
-    console.error("connection established to cluster is not")
+    console.error("Can't connect to cluster")
 })
